@@ -117,9 +117,9 @@ module "cloudfront" {
     ssl_support_method  = "sni-only"
   }
 
-  logging_config = {
-    bucket = module.log_bucket.s3_bucket_bucket_domain_name
-  }
+  #  logging_config = {
+  #    bucket = module.log_bucket.s3_bucket_bucket_domain_name
+  #  }
 
 }
 
@@ -134,22 +134,22 @@ module "website-bucket" {
   block_public_acls       = true
   block_public_policy     = true
 
-  server_side_encryption_configuration = {
-    rule = {
-      apply_server_side_encryption_by_default = {
-        sse_algorithm     = "aws:kms"
-      }
-    }
-  }
+  #  server_side_encryption_configuration = {
+  #    rule = {
+  #      apply_server_side_encryption_by_default = {
+  #        sse_algorithm     = "aws:kms"
+  #      }
+  #    }
+  #  }
 
   versioning = {
     enabled = true
   }
 
-  logging = {
-    target_bucket = module.log_bucket.s3_bucket_id
-    target_prefix = "log/"
-  }
+  #  logging = {
+  #    target_bucket = module.log_bucket.s3_bucket_id
+  #    target_prefix = "log/"
+  #  }
 }
 
 data "aws_iam_policy_document" "s3_policy" {
@@ -169,39 +169,39 @@ resource "aws_s3_bucket_policy" "bucket_policy" {
   policy = data.aws_iam_policy_document.s3_policy.json
 }
 
-module "log_bucket" {
-  source  = "terraform-aws-modules/s3-bucket/aws"
-  version = "3.6.0"
-
-  bucket = "logs-${random_pet.this.id}"
-  acl    = null
-  grant = [{
-    type        = "CanonicalUser"
-    permissions = ["FULL_CONTROL"]
-    id          = data.aws_canonical_user_id.current.id
-    }, {
-    type        = "CanonicalUser"
-    permissions = ["FULL_CONTROL"]
-    id          = "c4c1ede66af53448b93c283ce9448c4ba468c9432aa01d700d3878632f77d2d0"
-    # Ref. https://github.com/terraform-providers/terraform-provider-aws/issues/12512
-    # Ref. https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/AccessLogs.html
-  }]
-
-  force_destroy           = true
-  restrict_public_buckets = true
-  ignore_public_acls      = true
-  block_public_acls       = true
-  block_public_policy     = true
-
-  server_side_encryption_configuration = {
-    rule = {
-      apply_server_side_encryption_by_default = {
-        sse_algorithm     = "aws:kms"
-      }
-    }
-  }
-
-  versioning = {
-    enabled = true
-  }
-}
+#module "log_bucket" {
+#  source  = "terraform-aws-modules/s3-bucket/aws"
+#  version = "3.6.0"
+#
+#  bucket = "logs-${random_pet.this.id}"
+#  acl    = null
+#  grant = [{
+#    type        = "CanonicalUser"
+#    permissions = ["FULL_CONTROL"]
+#    id          = data.aws_canonical_user_id.current.id
+#    }, {
+#    type        = "CanonicalUser"
+#    permissions = ["FULL_CONTROL"]
+#    id          = "c4c1ede66af53448b93c283ce9448c4ba468c9432aa01d700d3878632f77d2d0"
+#    # Ref. https://github.com/terraform-providers/terraform-provider-aws/issues/12512
+#    # Ref. https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/AccessLogs.html
+#  }]
+#
+#  force_destroy           = true
+#  restrict_public_buckets = true
+#  ignore_public_acls      = true
+#  block_public_acls       = true
+#  block_public_policy     = true
+#
+#  server_side_encryption_configuration = {
+#    rule = {
+#      apply_server_side_encryption_by_default = {
+#        sse_algorithm     = "aws:kms"
+#      }
+#    }
+#  }
+#
+#  versioning = {
+#    enabled = true
+#  }
+#}
